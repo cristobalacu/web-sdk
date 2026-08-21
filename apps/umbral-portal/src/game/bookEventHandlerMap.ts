@@ -125,6 +125,7 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'drawerFold' });
 	},
 	updateFreeSpin: async (bookEvent: BookEventOfType<'updateFreeSpin'>) => {
+		eventEmitter.broadcast({ type: 'tumbleWinAmountReset' });
 		eventEmitter.broadcast({ type: 'freeSpinCounterShow' });
 		eventEmitter.broadcast({
 			type: 'freeSpinCounterUpdate',
@@ -134,12 +135,9 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 	},
 	updateGlobalMult: async (bookEvent: BookEventOfType<'updateGlobalMult'>) => {
 		eventEmitter.broadcast({ type: 'globalMultiplierShow' });
-		if (bookEvent.globalMult === 1) {
-			eventEmitter.broadcast({ type: 'tumbleWinAmountReset' });
-		}
 		await eventEmitter.broadcastAsync({
 			type: 'globalMultiplierUpdate',
-			multiplier: bookEvent.globalMult, // resets when multiplier === 1
+			multiplier: bookEvent.globalMult,
 		});
 	},
 	freeSpinEnd: async (bookEvent: BookEventOfType<'freeSpinEnd'>) => {
