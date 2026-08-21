@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { getSymbolBackgroundInfo, getSymbolInfo } from '../game/utils';
+	import { getSymbolInfo } from '../game/utils';
 	import type { MultiplierSymbol } from '../game/stateGame.svelte';
-	import SymbolSpineMain from './SymbolSpineMain.svelte';
-	import SymbolSpineBackground from './SymbolSpineBackground.svelte';
+	import SymbolSpriteAnimated from './SymbolSpriteAnimated.svelte';
 
 	type Props = {
 		reelIndex: number;
@@ -17,26 +16,21 @@
 			state: props.multiplierSymbol.symbolState,
 		}),
 	);
-
-	const symbolBackgroundInfo = $derived(
-		getSymbolBackgroundInfo({
-			rawSymbol: props.multiplierSymbol.rawSymbol,
-			state: props.multiplierSymbol.symbolState,
-		}),
-	);
 </script>
 
-<SymbolSpineBackground
-	{symbolBackgroundInfo}
-	x={props.multiplierSymbol.initX}
-	y={props.multiplierSymbol.initY}
-/>
+<!--
+	The multiplier symbols are always created in the `win` state (see MultiplierBoard.svelte)
+	and `multiplierBoardAnimate` awaits their `oncomplete`, so this must be the animated sprite
+	component: a plain SymbolSprite would fire `oncomplete` on mount and skip the pulse, and the
+	old Spine path no longer works now that every M state is a sprite.
 
-<SymbolSpineMain
+	No separate background is rendered any more — the placeholder sprite already contains the
+	multiplier frame and its number in a single image.
+-->
+<SymbolSpriteAnimated
 	{symbolInfo}
+	state={props.multiplierSymbol.symbolState as 'win' | 'explosion'}
 	x={props.multiplierSymbol.symbolX.current}
 	y={props.multiplierSymbol.symbolY.current}
-	listener={{
-		complete: props.multiplierSymbol.oncomplete,
-	}}
+	oncomplete={props.multiplierSymbol.oncomplete}
 />

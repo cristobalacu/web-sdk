@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Symbol from './Symbol.svelte';
 	import SymbolWrap from './SymbolWrap.svelte';
-	import { getSymbolX, getSymbolInfo } from '../game/utils';
+	import { getSymbolX } from '../game/utils';
 	import type { TumbleSymbol } from '../game/stateGame.svelte';
 
 	type Props = {
@@ -10,18 +10,15 @@
 	};
 
 	const props: Props = $props();
-	const symbolInfo = $derived(
-		getSymbolInfo({
-			rawSymbol: props.tumbleSymbol.rawSymbol,
-			state: props.tumbleSymbol.symbolState,
-		}),
-	);
 </script>
 
+<!-- `animating` selects the unmasked board layer (see SymbolWrap): only states that
+     actually play an animation and may overflow the board frame belong there. -->
 <SymbolWrap
 	x={getSymbolX(props.reelIndex)}
 	y={props.tumbleSymbol.symbolY.current}
-	animating={symbolInfo.type === 'spine'}
+	animating={props.tumbleSymbol.symbolState === 'win' ||
+		props.tumbleSymbol.symbolState === 'explosion'}
 >
 	<Symbol
 		state={props.tumbleSymbol.symbolState}

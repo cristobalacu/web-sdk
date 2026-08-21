@@ -1,6 +1,7 @@
 <script lang="ts">
 	import SymbolSpine from './SymbolSpine.svelte';
 	import SymbolSprite from './SymbolSprite.svelte';
+	import SymbolSpriteAnimated from './SymbolSpriteAnimated.svelte';
 	import { getSymbolBackgroundInfo, getSymbolInfo } from '../game/utils';
 	import type { SymbolState, RawSymbol } from '../game/types';
 	import { getContext } from '../game/context';
@@ -18,9 +19,18 @@
 	const context = getContext();
 	const symbolInfo = $derived(getSymbolInfo({ rawSymbol: props.rawSymbol, state: props.state }));
 	const isSprite = $derived(symbolInfo.type === 'sprite');
+	const isAnimatedState = $derived(props.state === 'win' || props.state === 'explosion');
 </script>
 
-{#if isSprite}
+{#if isSprite && isAnimatedState}
+	<SymbolSpriteAnimated
+		{symbolInfo}
+		state={props.state as 'win' | 'explosion'}
+		x={props.x}
+		y={props.y}
+		oncomplete={props.oncomplete}
+	/>
+{:else if isSprite}
 	<SymbolSprite {symbolInfo} x={props.x} y={props.y} oncomplete={props.oncomplete} />
 {:else}
 	{@const symbolBackgroundInfo = getSymbolBackgroundInfo({
