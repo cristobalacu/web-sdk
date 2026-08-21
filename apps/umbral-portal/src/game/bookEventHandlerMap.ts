@@ -112,7 +112,11 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'globalMultiplierShow' });
 		await eventEmitter.broadcastAsync({
 			type: 'globalMultiplierUpdate',
-			multiplier: 1, // resets when multiplier === 1
+			// Math never emits updateGlobalMult with value 1 (see reset_fs_spin in
+			// game_override.py, which resets global_multiplier internally without emitting
+			// an event). This hardcoded broadcast is therefore the only place that seeds the
+			// on-screen multiplier back to 1 when a bonus round starts.
+			multiplier: 1,
 		});
 		eventEmitter.broadcast({ type: 'freeSpinCounterShow' });
 		eventEmitter.broadcast({
