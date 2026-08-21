@@ -1,13 +1,22 @@
 <script lang="ts">
-	import { Rectangle, SpineProvider, SpineTrack } from 'pixi-svelte';
+	import { Rectangle, Sprite } from 'pixi-svelte';
 	import { FadeContainer } from 'components-pixi';
 	import { SECOND } from 'constants-shared/time';
 
 	import { getContext } from '../game/context';
+	import { backgroundRatio } from '../game/stateLayout';
 
 	const context = getContext();
 	const backgroundProps = $derived(
 		context.stateLayoutDerived.normalBackgroundLayout({ scale: 0.5 }),
+	);
+	// normalBackgroundLayout gives either width or height (never both) to preserve
+	// backgroundRatio.normal; the source art is cropped to that same ratio, so the
+	// missing dimension is derived from it rather than the sprite's own natural size.
+	const spriteLayout = $derived(
+		'width' in backgroundProps
+			? { ...backgroundProps, height: backgroundProps.width / backgroundRatio.normal }
+			: { ...backgroundProps, width: backgroundProps.height * backgroundRatio.normal },
 	);
 	const showBaseBackground = $derived(context.stateGame.gameType === 'basegame');
 	const showFeatureBackground = $derived(context.stateGame.gameType === 'freeSpins');
@@ -16,19 +25,9 @@
 <Rectangle {...context.stateLayoutDerived.canvasSizes()} backgroundColor={0x000000} zIndex={-3} />
 
 <FadeContainer show={showBaseBackground} duration={SECOND} zIndex={-2}>
-	<SpineProvider key="foregroundAnimation" {...backgroundProps}>
-		<SpineTrack trackIndex={0} animationName={'idle'} loop />
-	</SpineProvider>
-	<SpineProvider key="foregroundAnimation" {...backgroundProps}>
-		<SpineTrack trackIndex={0} animationName={'dust'} loop />
-	</SpineProvider>
+	<Sprite key="foregroundAnimation" anchor={0.5} {...spriteLayout} />
 </FadeContainer>
 
 <FadeContainer show={showFeatureBackground} duration={SECOND} zIndex={-1}>
-	<SpineProvider key="foregroundFeatureAnimation" {...backgroundProps}>
-		<SpineTrack trackIndex={0} animationName={'idle'} loop />
-	</SpineProvider>
-	<SpineProvider key="foregroundFeatureAnimation" {...backgroundProps}>
-		<SpineTrack trackIndex={0} animationName={'dust'} loop />
-	</SpineProvider>
+	<Sprite key="foregroundFeatureAnimation" anchor={0.5} {...spriteLayout} />
 </FadeContainer>
