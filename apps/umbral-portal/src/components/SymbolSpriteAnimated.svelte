@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Tween } from 'svelte/motion';
 	import { Sprite } from 'pixi-svelte';
+	import { stateBetDerived } from 'state-shared';
 	import { waitForTimeout } from 'utils-shared/wait';
 
 	import { getSymbolInfo } from '../game/utils';
@@ -19,18 +20,27 @@
 	const scale = new Tween(1);
 	const alpha = new Tween(1);
 
+	// Durations are divided by `stateBetDerived.timeScale()` (2 in turbo, else 1) so these
+	// tweens honour turbo mode, the same way the Spine path they replaced passed
+	// `timeScale={stateBetDerived.timeScale()}` to its SpineTrack. Same idiom as
+	// ClusterWinAmount.svelte.
 	$effect(() => {
+		const timeScale = stateBetDerived.timeScale();
+
 		if (props.state === 'win') {
 			// celebration pulse: grow then settle back to the resting size
 			(async () => {
-				await scale.set(1.15, { duration: 200 });
-				await scale.set(1, { duration: 200 });
+				await scale.set(1.15, { duration: 200 / timeScale });
+				await scale.set(1, { duration: 200 / timeScale });
 				props.oncomplete?.();
 			})();
 		} else {
 			// tumble removal: shrink and fade out, then report completion
 			(async () => {
-				await Promise.all([scale.set(0, { duration: 300 }), alpha.set(0, { duration: 300 })]);
+				await Promise.all([
+					scale.set(0, { duration: 300 / timeScale }),
+					alpha.set(0, { duration: 300 / timeScale }),
+				]);
 				await waitForTimeout(0);
 				props.oncomplete?.();
 			})();
