@@ -22,7 +22,7 @@
 			: { ...backgroundProps, width: backgroundProps.height * backgroundRatio.normal },
 	);
 	const showBaseBackground = $derived(context.stateGame.gameType === 'basegame');
-	const showFeatureBackground = $derived(context.stateGame.gameType === 'freeSpins');
+	const showFeatureBackground = $derived(context.stateGame.gameType === 'freegame');
 </script>
 
 <Rectangle {...context.stateLayoutDerived.canvasSizes()} backgroundColor={0x000000} zIndex={-3} />
