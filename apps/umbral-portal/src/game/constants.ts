@@ -155,37 +155,30 @@ const l4Static = { type: 'sprite', assetKey: 'l4', sizeRatios: { width: 1, heigh
 const sStatic = { type: 'sprite', assetKey: 'scatter', sizeRatios: { width: 1, height: 1 } };
 const wStatic = { type: 'sprite', assetKey: 'wild', sizeRatios: { width: 1, height: 1 } };
 
-const m2Static = {
+// Fase 2 Plan B replaced the five baked frame+number placeholders (m1_2x.png, ...,
+// m3_10x.png) with one sigil piece (assetKey `multiplierSigil`); the value is now
+// rendered as dynamic Cinzel text on top (see MultiplierSymbol.svelte). The low/high
+// tier size distinction the placeholders encoded is kept by scaling that one sigil.
+const multiplierSigilSmall = {
 	type: 'sprite',
-	assetKey: 'm1_2x.png',
+	assetKey: 'multiplierSigil',
 	sizeRatios: { width: 0.88, height: 0.88 },
 };
-const m4Static = {
+const multiplierSigilLarge = {
 	type: 'sprite',
-	assetKey: 'm1_4x.png',
-	sizeRatios: { width: 0.88, height: 0.88 },
+	assetKey: 'multiplierSigil',
+	sizeRatios: { width: 1, height: 1 },
 };
-const m5Static = { type: 'sprite', assetKey: 'm2_5x.png', sizeRatios: { width: 1, height: 1 } };
-const m7Static = { type: 'sprite', assetKey: 'm2_7x.png', sizeRatios: { width: 1, height: 1 } };
-const m10Static = { type: 'sprite', assetKey: 'm3_10x.png', sizeRatios: { width: 1, height: 1 } };
 
-// Multiplier symbol backgrounds. The placeholder sprites already contain the frame and
-// the number baked into one image, so every state reuses the matching static placeholder.
-const backgroundLowStatic = {
-	type: 'sprite',
-	assetKey: 'm1_2x.png',
-	sizeRatios: { width: 0.88, height: 0.88 },
-};
-const backgroundMidStatic = {
-	type: 'sprite',
-	assetKey: 'm2_5x.png',
-	sizeRatios: { width: 1, height: 1 },
-};
-const backgroundHighStatic = {
-	type: 'sprite',
-	assetKey: 'm3_10x.png',
-	sizeRatios: { width: 1, height: 1 },
-};
+const m2Static = multiplierSigilSmall;
+const m4Static = multiplierSigilSmall;
+const m5Static = multiplierSigilLarge;
+const m7Static = multiplierSigilLarge;
+const m10Static = multiplierSigilLarge;
+
+const backgroundLowStatic = multiplierSigilSmall;
+const backgroundMidStatic = multiplierSigilLarge;
+const backgroundHighStatic = multiplierSigilLarge;
 
 const backgroundLow = {
 	explosion,

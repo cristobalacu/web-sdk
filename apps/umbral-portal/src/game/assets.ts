@@ -149,6 +149,18 @@ export default {
 		type: 'sprite',
 		src: new URL('../../assets/sprites/scatter/scatter.png', import.meta.url).href,
 	},
+	multiplierSigil: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/multiplier/multiplier.png', import.meta.url).href,
+	},
+	cinzel: {
+		// Loaded as a real webfont (not a bitmap font like goldFont/silverFont) so the
+		// multiplier's dynamic value text can be rendered with a plain PIXI.Text -- see
+		// MultiplierSymbol.svelte. Pixi derives the CSS font-family name from the
+		// filename ("Cinzel.ttf" -> "Cinzel").
+		type: 'font',
+		src: new URL('../../assets/fonts/cinzel/Cinzel.ttf', import.meta.url).href,
+	},
 	reelsFrame: {
 		type: 'sprites',
 		src: new URL('../../assets/sprites/reelsFrame/reels_frame.json', import.meta.url).href,
