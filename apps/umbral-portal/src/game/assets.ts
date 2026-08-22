@@ -109,6 +109,46 @@ export default {
 			scale: 2,
 		},
 	},
+	h1: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/h1/h1.png', import.meta.url).href,
+	},
+	h2: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/h2/h2.png', import.meta.url).href,
+	},
+	h3: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/h3/h3.png', import.meta.url).href,
+	},
+	h4: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/h4/h4.png', import.meta.url).href,
+	},
+	l1: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/l1/l1.png', import.meta.url).href,
+	},
+	l2: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/l2/l2.png', import.meta.url).href,
+	},
+	l3: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/l3/l3.png', import.meta.url).href,
+	},
+	l4: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/l4/l4.png', import.meta.url).href,
+	},
+	wild: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/wild/wild.png', import.meta.url).href,
+	},
+	scatter: {
+		type: 'sprite',
+		src: new URL('../../assets/sprites/scatter/scatter.png', import.meta.url).href,
+	},
 	reelsFrame: {
 		type: 'sprites',
 		src: new URL('../../assets/sprites/reelsFrame/reels_frame.json', import.meta.url).href,

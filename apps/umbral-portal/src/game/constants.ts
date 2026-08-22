@@ -131,29 +131,29 @@ export const zIndexes = {
 	},
 };
 
-// PLACEHOLDER ART — every symbol state below is a plain sprite driven by code tweens
-// (see SymbolSpriteAnimated.svelte). Spine is no longer used for symbols because the
-// project has no Spine editor to author with. The `win`/`explosion`/`land`/`spin`
-// states currently reuse each symbol's `static` placeholder image; final per-state art
-// is produced and wired in Plan B.
+// H1-H4/L1-L4/Wild/Scatter use the final Fase 2 Plan B art (design/symbols/), wired
+// directly as their own sprite assets (no shared atlas). The `explosion` state and
+// Wild's `postWinStatic` still fall back to Fase 1 placeholders (`h1.webp`,
+// `explodedW.png` from the `symbolsStatic` atlas) — no dedicated art was produced for
+// those states in Plan B.
 const explosion = {
 	type: 'sprite',
 	assetKey: 'h1.webp',
 	sizeRatios: { width: 1, height: 1 },
 };
 
-const h1Static = { type: 'sprite', assetKey: 'h1.webp', sizeRatios: { width: 1, height: 1 } };
-const h2Static = { type: 'sprite', assetKey: 'h2.webp', sizeRatios: { width: 1, height: 1 } };
-const h3Static = { type: 'sprite', assetKey: 'h3.webp', sizeRatios: { width: 1, height: 1 } };
-const h4Static = { type: 'sprite', assetKey: 'h4.webp', sizeRatios: { width: 1, height: 1 } };
+const h1Static = { type: 'sprite', assetKey: 'h1', sizeRatios: { width: 1, height: 1 } };
+const h2Static = { type: 'sprite', assetKey: 'h2', sizeRatios: { width: 1, height: 1 } };
+const h3Static = { type: 'sprite', assetKey: 'h3', sizeRatios: { width: 1, height: 1 } };
+const h4Static = { type: 'sprite', assetKey: 'h4', sizeRatios: { width: 1, height: 1 } };
 
-const l1Static = { type: 'sprite', assetKey: 'l1.webp', sizeRatios: { width: 1, height: 1 } };
-const l2Static = { type: 'sprite', assetKey: 'l2.webp', sizeRatios: { width: 1, height: 1 } };
-const l3Static = { type: 'sprite', assetKey: 'l3.webp', sizeRatios: { width: 1, height: 1 } };
-const l4Static = { type: 'sprite', assetKey: 'l4.webp', sizeRatios: { width: 1, height: 1 } };
+const l1Static = { type: 'sprite', assetKey: 'l1', sizeRatios: { width: 1, height: 1 } };
+const l2Static = { type: 'sprite', assetKey: 'l2', sizeRatios: { width: 1, height: 1 } };
+const l3Static = { type: 'sprite', assetKey: 'l3', sizeRatios: { width: 1, height: 1 } };
+const l4Static = { type: 'sprite', assetKey: 'l4', sizeRatios: { width: 1, height: 1 } };
 
-const sStatic = { type: 'sprite', assetKey: 's.png', sizeRatios: { width: 1.243, height: 1.243 } };
-const wStatic = { type: 'sprite', assetKey: 'w.png', sizeRatios: { width: 1.12, height: 1.12 } };
+const sStatic = { type: 'sprite', assetKey: 'scatter', sizeRatios: { width: 1, height: 1 } };
+const wStatic = { type: 'sprite', assetKey: 'wild', sizeRatios: { width: 1, height: 1 } };
 
 const m2Static = {
 	type: 'sprite',
