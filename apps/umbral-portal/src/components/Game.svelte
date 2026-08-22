@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 
 	import { EnablePixiExtension } from 'components-pixi';
-	import { EnableHotkey } from 'components-shared';
+	import { EnableHotkey, EnableSpaceHold } from 'components-shared';
 	import { MainContainer } from 'components-layout';
 	import { App, Text, REM } from 'pixi-svelte';
 	import { stateModal } from 'state-shared';
@@ -47,6 +47,7 @@
 <App>
 	<EnableSound />
 	<EnableHotkey />
+	<EnableSpaceHold />
 	<EnableGameActor />
 	<EnablePixiExtension />
 
