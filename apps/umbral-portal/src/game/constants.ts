@@ -142,10 +142,13 @@ const explosion = {
 	sizeRatios: { width: 1, height: 1 },
 };
 
-const h1Static = { type: 'sprite', assetKey: 'h1', sizeRatios: { width: 1, height: 1 } };
+// H1 and H4's v2 art (see design/symbols/) has noticeably more transparent padding
+// around the actual artwork than H2/H3 within the same 512x512 canvas -- scaled up so
+// all four read as the same visual size on the board instead of H1/H4 looking shrunk.
+const h1Static = { type: 'sprite', assetKey: 'h1', sizeRatios: { width: 1.18, height: 1.18 } };
 const h2Static = { type: 'sprite', assetKey: 'h2', sizeRatios: { width: 1, height: 1 } };
 const h3Static = { type: 'sprite', assetKey: 'h3', sizeRatios: { width: 1, height: 1 } };
-const h4Static = { type: 'sprite', assetKey: 'h4', sizeRatios: { width: 1, height: 1 } };
+const h4Static = { type: 'sprite', assetKey: 'h4', sizeRatios: { width: 1.08, height: 1.08 } };
 
 const l1Static = { type: 'sprite', assetKey: 'l1', sizeRatios: { width: 1, height: 1 } };
 const l2Static = { type: 'sprite', assetKey: 'l2', sizeRatios: { width: 1, height: 1 } };
