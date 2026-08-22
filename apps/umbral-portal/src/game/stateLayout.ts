@@ -1,7 +1,10 @@
 import { createLayout } from 'utils-layout';
 
 export const backgroundRatio = {
-	normal: 2039 / 1000,
+	// Matches design/symbols/background.png's native size (1672x941) -- Background.svelte
+	// derives the sprite's missing width/height dimension from this, so it must track the
+	// actual art or the background renders stretched.
+	normal: 1672 / 941,
 	portrait: 1242 / 2208,
 };
 

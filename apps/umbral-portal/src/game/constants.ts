@@ -71,7 +71,7 @@ export const BOARD_SIZES = {
 	height: SYMBOL_SIZE * BOARD_DIMENSIONS.y,
 };
 
-export const BACKGROUND_RATIO = 2039 / 1000;
+export const BACKGROUND_RATIO = 1672 / 941;
 export const PORTRAIT_BACKGROUND_RATIO = 1242 / 2208;
 const PORTRAIT_RATIO = 800 / 1422;
 const LANDSCAPE_RATIO = 1600 / 900;
