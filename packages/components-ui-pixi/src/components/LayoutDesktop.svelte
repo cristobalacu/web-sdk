@@ -6,11 +6,57 @@
 
 	import { DESKTOP_BASE_SIZE, DESKTOP_BACKGROUND_WIDTH_LIST } from '../constants';
 	import { getContext } from '../context';
+	import { getCoreTheme } from '../theme/context';
+	import HUDContainer from './HUDContainer/HUDContainer.svelte';
 	import type { LayoutUiProps } from '../types';
 
 	const props: LayoutUiProps = $props();
 	const context = getContext();
+
+	const BOTTOM_BAR_WIDTH = DESKTOP_BACKGROUND_WIDTH_LIST.reduce((sum, width) => sum + width, 0);
 </script>
+
+{#snippet bottomBarContent()}
+	<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900 - 500} scale={0.8}>
+		{@render props.amountBalance({ stacked: true })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900} scale={0.8}>
+		{@render props.amountWin({ stacked: true })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900 + 500} scale={0.8}>
+		{@render props.amountBet({ stacked: true })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={220} scale={0.8}>
+		{@render props.buttonMenu({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={220 + 150} scale={0.8}>
+		{@render props.buttonBuyBonus({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 4} scale={0.8}>
+		{@render props.buttonAutoSpin({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 5} scale={0.8}>
+		{@render props.buttonBet({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 6} scale={0.8}>
+		{@render props.buttonTurbo({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={1440} scale={0.8}>
+		{@render props.buttonDecrease({ anchor: 0.5 })}
+	</Container>
+
+	<Container y={DESKTOP_BASE_SIZE * 0.5} x={1440 + 150} scale={0.8}>
+		{@render props.buttonIncrease({ anchor: 0.5 })}
+	</Container>
+{/snippet}
 
 <Container x={20}>
 	{@render props.gameName()}
@@ -32,45 +78,15 @@
 			},
 		})}
 	>
-		<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900 - 500} scale={0.8}>
-			{@render props.amountBalance({ stacked: true })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900} scale={0.8}>
-			{@render props.amountWin({ stacked: true })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5 - 160} x={900 + 500} scale={0.8}>
-			{@render props.amountBet({ stacked: true })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={220} scale={0.8}>
-			{@render props.buttonMenu({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={220 + 150} scale={0.8}>
-			{@render props.buttonBuyBonus({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 4} scale={0.8}>
-			{@render props.buttonAutoSpin({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 5} scale={0.8}>
-			{@render props.buttonBet({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={160 + 150 * 6} scale={0.8}>
-			{@render props.buttonTurbo({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={1440} scale={0.8}>
-			{@render props.buttonDecrease({ anchor: 0.5 })}
-		</Container>
-
-		<Container y={DESKTOP_BASE_SIZE * 0.5} x={1440 + 150} scale={0.8}>
-			{@render props.buttonIncrease({ anchor: 0.5 })}
-		</Container>
+		{#if getCoreTheme().meta.isDefault}
+			{@render bottomBarContent()}
+		{:else}
+			<HUDContainer width={BOTTOM_BAR_WIDTH} height={DESKTOP_BASE_SIZE}>
+				{#snippet children()}
+					{@render bottomBarContent()}
+				{/snippet}
+			</HUDContainer>
+		{/if}
 	</Container>
 </MainContainer>
 
