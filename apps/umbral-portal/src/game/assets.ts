@@ -161,6 +161,20 @@ export default {
 		type: 'font',
 		src: new URL('../../assets/fonts/cinzel/Cinzel.ttf', import.meta.url).href,
 	},
+	sora: {
+		// Core UI theme layer (primaryValue typography). Same webfont-loading mechanism
+		// as `cinzel` above. Pixi's loadWebFont parser derives the CSS font-family name
+		// from the filename by replacing "-"/"_" with spaces and title-casing each word
+		// (see pixi.js's getFontFamilyName in assets/loader/parsers/loadWebFont) --
+		// for "Sora-SemiBold.ttf" that yields the family "Sora Semibold" (note: a space,
+		// and only the leading "S" of "Semibold" capitalized -- NOT "Sora-SemiBold" and
+		// NOT "SoraSemiBold"). No `data.weights` is passed here (same as cinzel), so the
+		// registered FontFace is tagged weight "normal" regardless of the file being the
+		// SemiBold cut -- consumers should reference this as its own family rather than
+		// relying on CSS fontWeight to select a heavier face.
+		type: 'font',
+		src: new URL('../../assets/fonts/sora/Sora-SemiBold.ttf', import.meta.url).href,
+	},
 	reelsFrame: {
 		type: 'sprites',
 		src: new URL('../../assets/sprites/reelsFrame/reels_frame.json', import.meta.url).href,
