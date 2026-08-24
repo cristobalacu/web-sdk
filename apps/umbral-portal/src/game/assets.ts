@@ -175,6 +175,18 @@ export default {
 		type: 'font',
 		src: new URL('../../assets/fonts/sora/Sora-SemiBold.ttf', import.meta.url).href,
 	},
+	soraBold: {
+		// Core UI theme layer (winBig typography, per Foundations spec: weight 700).
+		// Same webfont-loading mechanism as `cinzel`/`sora` above. Verified against the
+		// REAL installed pixi.js 8.8.1 loadWebFont parser (ran its actual
+		// `getFontFamilyName` function, not hand-derived) -- for "Sora-Bold.ttf" that
+		// yields the family "Sora Bold" (space-separated, same pattern as "Sora
+		// Semibold"). As with `sora`, no `data.weights` is passed, so the registered
+		// FontFace is tagged weight "normal" -- consumers should reference this as its
+		// own family, not rely on CSS fontWeight to select it from a shared "Sora" family.
+		type: 'font',
+		src: new URL('../../assets/fonts/sora/Sora-Bold.ttf', import.meta.url).href,
+	},
 	reelsFrame: {
 		type: 'sprites',
 		src: new URL('../../assets/sprites/reelsFrame/reels_frame.json', import.meta.url).href,

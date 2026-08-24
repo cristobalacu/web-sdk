@@ -67,14 +67,25 @@ export type CoreThemeGeometry = {
 };
 
 export type CoreThemeTextStyle = {
+	// Per-style, not shared at the CoreThemeTypography level -- Task 2's spike confirmed
+	// the real Pixi webfont pipeline registers one CSS font-family per loaded font FILE
+	// (derived from its filename) with no per-weight face selection, so a single shared
+	// family + a varying fontWeight per style is a no-op under the real mechanism. Each
+	// text style must name its own already-resolved family (e.g. "Sora Semibold" for
+	// primaryValue, "Sora Bold" for winBig) rather than relying on fontWeight to pick a
+	// heavier cut of one shared family. See task-2-report.md for the full investigation.
+	fontFamily: string;
 	fontSize: number;
+	// Semantic/documentation value: what weight `fontFamily` visually represents. Not
+	// guaranteed to be functionally consumed as CSS fontWeight for family/weight
+	// selection under the real font pipeline (see `fontFamily` comment above) -- kept
+	// here as valid semantic data, but do not assume setting it alone changes rendering.
 	fontWeight: string;
 	letterSpacing: number;
 	fill: string;
 };
 
 export type CoreThemeTypography = {
-	fontFamily: string;
 	microLabel: CoreThemeTextStyle;
 	primaryValue: CoreThemeTextStyle;
 	betValue: CoreThemeTextStyle;
