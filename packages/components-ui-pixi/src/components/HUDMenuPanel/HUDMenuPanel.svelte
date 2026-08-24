@@ -32,7 +32,7 @@
 	<SecondaryIconButton icon="menu" state="default" onpress={props.onToggle} />
 
 	{#if props.open}
-		<Container y={ITEM_SIZE + 20}>
+		<Container y={-(panelHeight + 20)}>
 			<Graphics draw={drawPanel} />
 			{#each props.items as item, i (item.icon)}
 				<Container x={ITEM_GAP} y={ITEM_GAP + i * (ITEM_SIZE + ITEM_GAP)}>
