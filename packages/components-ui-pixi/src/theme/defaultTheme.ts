@@ -42,12 +42,12 @@ export const defaultTheme: CoreTheme = {
 	},
 	typography: {
 		fontFamily: 'proxima-nova',
-		microLabel: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
-		primaryValue: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
-		betValue: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
-		winZero: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
-		winActive: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
-		winBig: { fontSize: 22.5, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		microLabel: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		primaryValue: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		betValue: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		winZero: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		winActive: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
+		winBig: { fontSize: 45, fontWeight: '400', letterSpacing: 0, fill: '#FFFFFF' },
 	},
 	motion: {
 		hover: { durationMs: 0, scale: 1 },
