@@ -9,6 +9,7 @@
 		label: string;
 		value: string;
 		winState?: 'zero' | 'active' | 'big';
+		onpress?: () => void;
 	};
 
 	const props: Props = $props();
@@ -28,7 +29,11 @@
 	const draw = (g: import('pixi.js').Graphics) => drawDarkGlass(theme, g, WIDTH, HEIGHT, theme.geometry.radius.card);
 </script>
 
-<Container>
+<Container
+	eventMode={props.onpress ? 'static' : 'none'}
+	cursor={props.onpress ? 'pointer' : 'default'}
+	onpointerup={props.onpress}
+>
 	<Graphics draw={draw} />
 	<Text
 		x={PADDING}

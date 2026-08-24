@@ -66,6 +66,39 @@
 	{@render props.logo()}
 </Container>
 
+{#if !getCoreTheme().meta.isDefault}
+	<!--
+		Bug 1 fix (final whole-branch review): this scrim is intentionally mounted UNCONDITIONALLY
+		(gated only on the theme, which is invariant post-mount, not on stateUi.menuOpen) and its
+		visibility/interactivity toggled via reactive props instead. pixi-svelte's Container
+		context (see packages/pixi-svelte/src/lib/context.svelte.ts: addToParent does
+		`parent.addChild(node); parent.sortChildren()` inside `onMount`) appends every node to the
+		END of its parent's children array at the moment it mounts, and sortChildren() is a no-op
+		for equal (default 0) zIndex -- so document/source order only determines paint order for
+		nodes that mount in the SAME initial synchronous pass. A node that mounts later (e.g. via
+		{#if stateUi.menuOpen}) always ends up appended after -- and therefore rendered on top of
+		-- everything already mounted, regardless of where it sits in the template. Since the
+		MainContainer bottom bar below (which contains HUDMenuPanel) is already mounted before the
+		user ever opens the menu, a scrim that only mounts when stateUi.menuOpen flips true would
+		always paint above it, reintroducing this exact bug. Confirmed by inspecting the live
+		Pixi stage tree (window.__PIXI_APP__) while testing: the {#if stateUi.menuOpen} version
+		put the scrim's Graphics node after the bottom bar's in the children array. Mounting once,
+		up front, in template order preserves paint order correctly.
+	-->
+	<Rectangle
+		eventMode={stateUi.menuOpen ? 'static' : 'none'}
+		cursor="pointer"
+		alpha={stateUi.menuOpen ? 0.5 : 0}
+		anchor={0.5}
+		backgroundColor={BLACK}
+		width={context.stateLayoutDerived.canvasSizes().width}
+		height={context.stateLayoutDerived.canvasSizes().height}
+		x={context.stateLayoutDerived.canvasSizes().width * 0.5}
+		y={context.stateLayoutDerived.canvasSizes().height * 0.5}
+		onpointerup={() => (stateUi.menuOpen = false)}
+	/>
+{/if}
+
 <MainContainer standard alignVertical="bottom">
 	<Container
 		x={context.stateLayoutDerived.mainLayoutStandard().width * 0.5}
@@ -90,7 +123,7 @@
 	</Container>
 </MainContainer>
 
-{#if stateUi.menuOpen}
+{#if stateUi.menuOpen && getCoreTheme().meta.isDefault}
 	<Rectangle
 		eventMode="static"
 		cursor="pointer"

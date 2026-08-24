@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
+	import { Container } from 'pixi-svelte';
 	import { getContextLayout } from 'utils-layout';
 	import { EnableSpaceHold } from 'components-shared';
 	import { stateBet, stateBetDerived, stateUi, stateModal, stateSound } from 'state-shared';
@@ -101,6 +102,37 @@
 		}
 	};
 
+	// Copied from LabelBet.svelte -- bet-amount menu entry point, missing from the Core UI branch
+	// (found in the final whole-branch review).
+	const betMenuDisabled = $derived(!stateXstateDerived.isIdle());
+	const onpressBet = () => {
+		if (betMenuDisabled) return;
+		eventEmitter.broadcast({ type: 'soundPressGeneral' });
+		stateModal.modal = { name: 'betAmountMenu' };
+	};
+
+	// Only under the Core UI theme -- the legacy branch still mounts ButtonTurbo.svelte, which
+	// already owns this exact subscription; adding it unconditionally here would double-subscribe
+	// (and double-fire) for the other 6 legacy games. `isDefault` never changes after the initial
+	// setCoreTheme() call, so a plain `if` here (not a reactive $effect) is correct and runs once.
+	if (!getCoreTheme().meta.isDefault) {
+		eventEmitter.subscribeOnMount({
+			stopButtonClick: () => stateBetDerived.updateIsTurbo(true, { persistent: false }),
+			stopButtonEnable: () => stateBetDerived.updateIsTurbo(false, { persistent: false }),
+		});
+	}
+
+	// Core UI layout compensation constants -- LayoutDesktop.svelte's call sites pass
+	// {anchor: 0.5} (buttons) / {stacked: true} (amounts) assuming legacy anchor/pivot semantics
+	// (see Button.svelte's pivot={anchorToPivot(...)} and UiLabel.svelte's stacked anchor). The 6
+	// new Core UI components draw from their own local (0,0) instead, so each call site below
+	// wraps them in a compensating <Container> instead of touching the already-approved
+	// components themselves.
+	const SECONDARY_BUTTON_DIAMETER = $derived(getCoreTheme().geometry.radius.secondaryButton * 2);
+	const FEATURE_ENTRY_WIDTH = 190; // must match FeatureEntryButton.svelte's internal WIDTH
+	const FEATURE_ENTRY_HEIGHT = 56; // must match FeatureEntryButton.svelte's internal HEIGHT
+	const STAT_CARD_WIDTH = { balance: 200, bet: 260, win: 200 } as const; // must match StatCard.svelte's internal WIDTH ternary
+
 	// buttonMenu (!isDefault) renders HUDMenuPanel, which absorbs the 5 other legacy menu
 	// snippets (buttonPayTable/buttonGameRules/buttonSettings/buttonSoundSwitch/buttonMenuClose)
 	// as its `items`. onpress logic per item copied from the matching legacy Button*.svelte.
@@ -166,11 +198,13 @@
 			{#if getCoreTheme().meta.isDefault}
 				<LabelBalance {...labelProps} />
 			{:else}
-				<StatCard
-					variant="balance"
-					label={i18nDerived.balance()}
-					value={numberToCurrencyString(stateBet.balanceAmount)}
-				/>
+				<Container x={-STAT_CARD_WIDTH.balance / 2}>
+					<StatCard
+						variant="balance"
+						label={i18nDerived.balance()}
+						value={numberToCurrencyString(stateBet.balanceAmount)}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -178,12 +212,14 @@
 			{#if getCoreTheme().meta.isDefault}
 				<LabelWin {...labelProps} />
 			{:else}
-				<StatCard
-					variant="win"
-					label={i18nDerived.win()}
-					value={bookEventAmountToCurrencyString(stateBet.winBookEventAmount)}
-					winState={winState}
-				/>
+				<Container x={-STAT_CARD_WIDTH.win / 2}>
+					<StatCard
+						variant="win"
+						label={i18nDerived.win()}
+						value={bookEventAmountToCurrencyString(stateBet.winBookEventAmount)}
+						winState={winState}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -191,11 +227,14 @@
 			{#if getCoreTheme().meta.isDefault}
 				<LabelBet {...labelProps} />
 			{:else}
-				<StatCard
-					variant="bet"
-					label={stateBetDerived.activeBetMode()?.text.betAmountLabel || i18nDerived.bet()}
-					value={numberToCurrencyString(stateBetDerived.betCost())}
-				/>
+				<Container x={-STAT_CARD_WIDTH.bet / 2}>
+					<StatCard
+						variant="bet"
+						label={stateBetDerived.activeBetMode()?.text.betAmountLabel || i18nDerived.bet()}
+						value={numberToCurrencyString(stateBetDerived.betCost())}
+						onpress={onpressBet}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -203,11 +242,13 @@
 			{#if getCoreTheme().meta.isDefault}
 				<ButtonBuyBonus {...buttonProps} />
 			{:else}
-				<FeatureEntryButton
-					label={buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}
-					state={buyBonusDisabled ? 'disabled' : buyBonusActive ? 'highlightedAvailable' : 'default'}
-					onpress={onpressBuyBonus}
-				/>
+				<Container x={-FEATURE_ENTRY_WIDTH / 2} y={-FEATURE_ENTRY_HEIGHT / 2}>
+					<FeatureEntryButton
+						label={buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}
+						state={buyBonusDisabled ? 'disabled' : buyBonusActive ? 'highlightedAvailable' : 'default'}
+						onpress={onpressBuyBonus}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -219,11 +260,13 @@
 			{#if getCoreTheme().meta.isDefault}
 				<ButtonTurbo {...buttonProps} />
 			{:else}
-				<SecondaryIconButton
-					icon="turbo"
-					state={turboDisabled ? 'disabled' : turboActive ? 'active' : 'default'}
-					onpress={onpressTurbo}
-				/>
+				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
+					<SecondaryIconButton
+						icon="turbo"
+						state={turboDisabled ? 'disabled' : turboActive ? 'active' : 'default'}
+						onpress={onpressTurbo}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -231,11 +274,13 @@
 			{#if getCoreTheme().meta.isDefault}
 				<ButtonAutoSpin {...buttonProps} />
 			{:else}
-				<SecondaryIconButton
-					icon="autoplay"
-					state={autoSpinDisabled ? 'disabled' : autoSpinActive ? 'active' : 'default'}
-					onpress={onpressAutoSpin}
-				/>
+				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
+					<SecondaryIconButton
+						icon="autoplay"
+						state={autoSpinDisabled ? 'disabled' : autoSpinActive ? 'active' : 'default'}
+						onpress={onpressAutoSpin}
+					/>
+				</Container>
 			{/if}
 		{/snippet}
 
@@ -251,7 +296,9 @@
 			{#if getCoreTheme().meta.isDefault}
 				<ButtonMenu {...buttonProps} />
 			{:else}
-				<HUDMenuPanel open={stateUi.menuOpen} items={menuItems} onToggle={onToggleMenu} />
+				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
+					<HUDMenuPanel open={stateUi.menuOpen} items={menuItems} onToggle={onToggleMenu} />
+				</Container>
 			{/if}
 		{/snippet}
 

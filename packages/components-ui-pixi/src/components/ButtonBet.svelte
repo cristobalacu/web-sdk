@@ -75,7 +75,10 @@
 				preserves the legacy "disabled means unclickable" behavior without modifying the
 				already-reviewed Task 7 component.
 			-->
-			<SpinButton state={spinButtonState} onpress={disabled ? undefined : onpress} />
+			{@const spinDiameter = getCoreTheme().geometry.radius.spinDesktop * 2}
+			<Container x={-spinDiameter / 2} y={-spinDiameter / 2}>
+				<SpinButton state={spinButtonState} onpress={disabled ? undefined : onpress} />
+			</Container>
 		{/if}
 	{/snippet}
 </ButtonBetProvider>
