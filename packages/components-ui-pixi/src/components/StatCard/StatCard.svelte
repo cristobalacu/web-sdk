@@ -24,6 +24,8 @@
 	const PADDING = size === 'mobile' ? 12 : 20;
 	const LABEL_FONT_SIZE = size === 'mobile' ? 10 : theme.typography.microLabel.fontSize;
 	const VALUE_FONT_SIZE = size === 'mobile' ? 17 : undefined; // undefined = usar valueStyle() sin override
+	const LABEL_Y = size === 'mobile' ? 8 : PADDING;
+	const VALUE_Y = size === 'mobile' ? 22 : PADDING + LABEL_FONT_SIZE + 6;
 
 	const valueStyle = $derived(() => {
 		if (props.variant !== 'win') return theme.typography.primaryValue;
@@ -43,7 +45,7 @@
 	<Graphics draw={draw} />
 	<Text
 		x={PADDING}
-		y={PADDING}
+		y={LABEL_Y}
 		text={props.label}
 		style={{
 			fontFamily: theme.typography.microLabel.fontFamily,
@@ -55,7 +57,7 @@
 	/>
 	<Text
 		x={PADDING}
-		y={PADDING + LABEL_FONT_SIZE + 6}
+		y={VALUE_Y}
 		text={props.value}
 		style={{
 			fontFamily: valueStyle().fontFamily,
