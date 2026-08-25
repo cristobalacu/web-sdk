@@ -61,6 +61,7 @@ export const umbralCoreTheme: CoreTheme = {
 			hud: 24,
 			secondaryButton: 23,
 			spinDesktop: 64,
+			spinMobile: 52,
 		},
 		strokeWidth: {
 			base: 1,
