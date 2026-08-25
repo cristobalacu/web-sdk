@@ -23,16 +23,31 @@
 		height: panelWidth / PANEL_RATIO_DESKTOP,
 	});
 	const scale = 1;
-	const position = $derived({
-		x:
-			context.stateGameDerived.boardLayout().x -
-			context.stateGameDerived.boardLayout().width * 0.5 -
-			panelSizes.width -
-			SYMBOL_SIZE * 0.7,
-		y:
-			context.stateGameDerived.boardLayout().y -
-			context.stateGameDerived.boardLayout().height * 0.5,
-	});
+	// Portrait: no hay suficiente margen horizontal a los costados del reel para el
+	// posicionamiento desktop (panel de 200px vs. ~100px de margen real) -- se centra arriba
+	// del board en vez de al costado. Reusa boardLayout() (ya board-relative, sin hardcodear
+	// ningún breakpoint) igual que la rama desktop.
+	const position = $derived(
+		context.stateLayoutDerived.layoutType() === 'portrait'
+			? {
+					x: context.stateGameDerived.boardLayout().x - panelSizes.width * 0.5,
+					y:
+						context.stateGameDerived.boardLayout().y -
+						context.stateGameDerived.boardLayout().height * 0.5 -
+						panelSizes.height -
+						SYMBOL_SIZE * 0.3,
+				}
+			: {
+					x:
+						context.stateGameDerived.boardLayout().x -
+						context.stateGameDerived.boardLayout().width * 0.5 -
+						panelSizes.width -
+						SYMBOL_SIZE * 0.7,
+					y:
+						context.stateGameDerived.boardLayout().y -
+						context.stateGameDerived.boardLayout().height * 0.5,
+				},
+	);
 
 	const fontSize = SYMBOL_SIZE * 0.275;
 

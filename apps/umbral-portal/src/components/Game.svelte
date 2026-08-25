@@ -114,7 +114,7 @@
 		</UI>
 		<Win />
 		<FreeSpinIntro />
-		{#if ['desktop', 'landscape'].includes(context.stateLayoutDerived.layoutType())}
+		{#if ['desktop', 'landscape'].includes(context.stateLayoutDerived.layoutType()) || (context.stateLayoutDerived.layoutType() === 'portrait' && !getCoreTheme().meta.isDefault)}
 			<FreeSpinCounter />
 		{/if}
 		<FreeSpinOutro />
