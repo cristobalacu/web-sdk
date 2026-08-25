@@ -7,6 +7,7 @@
 
 	import BaseContent from './BaseContent.svelte';
 	import BaseScrollable from './BaseScrollable.svelte';
+	import { i18nDerived } from '../i18n/i18nDerived';
 
 	type Props = {
 		children: Snippet;
@@ -21,7 +22,16 @@
 			<BaseScrollable type="column">
 				<span>ADD YOUR GAME RULES</span>
 				{@render props.children()}
+				<p class="disclaimer">{i18nDerived.disclaimer()}</p>
 			</BaseScrollable>
 		</BaseContent>
 	</Popup>
 {/if}
+
+<style lang="scss">
+	.disclaimer {
+		text-align: center;
+		font-size: 0.75rem;
+		opacity: 0.7;
+	}
+</style>

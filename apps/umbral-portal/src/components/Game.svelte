@@ -91,7 +91,7 @@
 
 		<UI>
 			{#snippet gameName()}
-				<UiGameName name="SCATTER GAME" />
+				<UiGameName name="UMBRAL PORTAL" />
 			{/snippet}
 			{#snippet logo()}
 				<Text

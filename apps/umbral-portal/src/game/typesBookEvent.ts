@@ -45,6 +45,7 @@ type BookEventFreeSpinTrigger = {
 	type: 'freeSpinTrigger';
 	totalFs: number;
 	positions: Position[];
+	globalMult: number;
 };
 
 type BookEventUpdateFreeSpin = {

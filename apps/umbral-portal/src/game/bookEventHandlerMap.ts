@@ -25,8 +25,7 @@ const winLevelSoundsPlay = ({ winLevelData }: { winLevelData: WinLevelData }) =>
 
 const winLevelSoundsStop = () => {
 	eventEmitter.broadcast({ type: 'soundStop', name: 'sfx_bigwin_coinloop' });
-	if (stateBet.activeBetModeKey === 'SUPERSPIN' || stateGame.gameType === 'freegame') {
-		// check if SUPERSPIN, when finishing a bet.
+	if (stateGame.gameType === 'freegame') {
 		eventEmitter.broadcast({ type: 'soundMusic', name: 'bgm_freespin' });
 	} else {
 		eventEmitter.broadcast({ type: 'soundMusic', name: 'bgm_main' });
@@ -112,11 +111,11 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'globalMultiplierShow' });
 		await eventEmitter.broadcastAsync({
 			type: 'globalMultiplierUpdate',
-			// Math never emits updateGlobalMult with value 1 (see reset_fs_spin in
-			// game_override.py, which resets global_multiplier internally without emitting
-			// an event). This hardcoded broadcast is therefore the only place that seeds the
-			// on-screen multiplier back to 1 when a bonus round starts.
-			multiplier: 1,
+			// Seeds the on-screen multiplier with the real tier-based starting value
+			// (4 scatters -> x1, 5 -> x2, 6 -> x3 — see
+			// game_override.py::get_bonus_tier_starting_multiplier) as soon as the bonus
+			// round starts, instead of always showing x1 until the first winning tumble.
+			multiplier: bookEvent.globalMult,
 		});
 		eventEmitter.broadcast({ type: 'freeSpinCounterShow' });
 		eventEmitter.broadcast({
