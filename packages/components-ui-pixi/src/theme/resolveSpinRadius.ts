@@ -5,5 +5,9 @@ export function resolveSpinRadius(
 	theme: CoreTheme,
 	layoutType: 'desktop' | 'portrait' | 'landscape' | 'tablet',
 ): number {
-	return (layoutType === 'portrait' ? theme.geometry.radius.spinMobile : theme.geometry.radius.spinDesktop) * 2;
+	return (
+		(layoutType === 'portrait'
+			? theme.geometry.radius.spinMobile
+			: theme.geometry.radius.spinDesktop) * 2
+	);
 }
