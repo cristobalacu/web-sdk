@@ -57,22 +57,7 @@
 
 	const LayoutComponent = $derived(LAYOUT_COMPONENT_MAP[stateLayoutDerived.layoutType()]);
 
-	const {
-		winState,
-		buyBonusActive,
-		buyBonusDisabled,
-		onpressBuyBonus,
-		turboActive,
-		turboDisabled,
-		onpressTurbo,
-		autoSpinActive,
-		autoSpinDisabled,
-		onpressAutoSpin,
-		betMenuDisabled,
-		onpressBet,
-		menuItems,
-		onToggleMenu,
-	} = createCoreUiDerived(context);
+	const coreUiDerived = createCoreUiDerived(context);
 
 	// Only under the Core UI theme -- the legacy branch still mounts ButtonTurbo.svelte, which
 	// already owns this exact subscription; adding it unconditionally here would double-subscribe
@@ -135,7 +120,7 @@
 						variant="win"
 						label={i18nDerived.win()}
 						value={bookEventAmountToCurrencyString(stateBet.winBookEventAmount)}
-						{winState}
+						winState={coreUiDerived.winState}
 					/>
 				</Container>
 			{/if}
@@ -150,7 +135,7 @@
 						variant="bet"
 						label={stateBetDerived.activeBetMode()?.text.betAmountLabel || i18nDerived.bet()}
 						value={numberToCurrencyString(stateBetDerived.betCost())}
-						onpress={onpressBet}
+						onpress={coreUiDerived.onpressBet}
 					/>
 				</Container>
 			{/if}
@@ -162,13 +147,13 @@
 			{:else}
 				<Container x={-FEATURE_ENTRY_WIDTH / 2} y={-FEATURE_ENTRY_HEIGHT / 2}>
 					<FeatureEntryButton
-						label={buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}
-						state={buyBonusDisabled
+						label={coreUiDerived.buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}
+						state={coreUiDerived.buyBonusDisabled
 							? 'disabled'
-							: buyBonusActive
+							: coreUiDerived.buyBonusActive
 								? 'highlightedAvailable'
 								: 'default'}
-						onpress={onpressBuyBonus}
+						onpress={coreUiDerived.onpressBuyBonus}
 					/>
 				</Container>
 			{/if}
@@ -185,8 +170,12 @@
 				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
 					<SecondaryIconButton
 						icon="turbo"
-						state={turboDisabled ? 'disabled' : turboActive ? 'active' : 'default'}
-						onpress={onpressTurbo}
+						state={coreUiDerived.turboDisabled
+							? 'disabled'
+							: coreUiDerived.turboActive
+								? 'active'
+								: 'default'}
+						onpress={coreUiDerived.onpressTurbo}
 					/>
 				</Container>
 			{/if}
@@ -199,8 +188,12 @@
 				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
 					<SecondaryIconButton
 						icon="autoplay"
-						state={autoSpinDisabled ? 'disabled' : autoSpinActive ? 'active' : 'default'}
-						onpress={onpressAutoSpin}
+						state={coreUiDerived.autoSpinDisabled
+							? 'disabled'
+							: coreUiDerived.autoSpinActive
+								? 'active'
+								: 'default'}
+						onpress={coreUiDerived.onpressAutoSpin}
 					/>
 				</Container>
 			{/if}
@@ -219,7 +212,11 @@
 				<ButtonMenu {...buttonProps} />
 			{:else}
 				<Container x={-SECONDARY_BUTTON_DIAMETER / 2} y={-SECONDARY_BUTTON_DIAMETER / 2}>
-					<HUDMenuPanel open={stateUi.menuOpen} items={menuItems} onToggle={onToggleMenu} />
+					<HUDMenuPanel
+						open={stateUi.menuOpen}
+						items={coreUiDerived.menuItems}
+						onToggle={coreUiDerived.onToggleMenu}
+					/>
 				</Container>
 			{/if}
 		{/snippet}

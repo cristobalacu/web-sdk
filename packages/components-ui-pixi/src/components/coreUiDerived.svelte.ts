@@ -92,19 +92,37 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 	};
 
 	return {
-		winState,
-		buyBonusActive,
-		buyBonusDisabled,
+		get winState() {
+			return winState;
+		},
+		get buyBonusActive() {
+			return buyBonusActive;
+		},
+		get buyBonusDisabled() {
+			return buyBonusDisabled;
+		},
 		onpressBuyBonus,
-		turboActive,
-		turboDisabled,
+		get turboActive() {
+			return turboActive;
+		},
+		get turboDisabled() {
+			return turboDisabled;
+		},
 		onpressTurbo,
-		autoSpinActive,
-		autoSpinDisabled,
+		get autoSpinActive() {
+			return autoSpinActive;
+		},
+		get autoSpinDisabled() {
+			return autoSpinDisabled;
+		},
 		onpressAutoSpin,
-		betMenuDisabled,
+		get betMenuDisabled() {
+			return betMenuDisabled;
+		},
 		onpressBet,
-		menuItems,
+		get menuItems() {
+			return menuItems;
+		},
 		onToggleMenu,
 	};
 }
