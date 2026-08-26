@@ -4,7 +4,7 @@
 	import { Container } from 'pixi-svelte';
 	import { getContextLayout } from 'utils-layout';
 	import { EnableSpaceHold } from 'components-shared';
-	import { stateBet, stateBetDerived, stateUi, stateModal, stateSound } from 'state-shared';
+	import { stateBet, stateBetDerived, stateUi } from 'state-shared';
 	import { numberToCurrencyString, bookEventAmountToCurrencyString } from 'utils-shared/amount';
 
 	import UiFadeContainer from './UiFadeContainer.svelte';
@@ -35,6 +35,7 @@
 	import FeatureEntryButton from './FeatureEntryButton/FeatureEntryButton.svelte';
 	import SecondaryIconButton from './SecondaryIconButton/SecondaryIconButton.svelte';
 	import HUDMenuPanel from './HUDMenuPanel/HUDMenuPanel.svelte';
+	import { createCoreUiDerived } from './coreUiDerived.svelte';
 
 	type Props = {
 		gameName: Snippet;
@@ -44,7 +45,8 @@
 	const props: Props = $props();
 
 	const { stateLayoutDerived } = getContextLayout();
-	const { stateXstateDerived, eventEmitter } = getContext();
+	const context = getContext();
+	const { eventEmitter } = context;
 
 	const LAYOUT_COMPONENT_MAP = {
 		desktop: LayoutDesktop,
@@ -55,61 +57,22 @@
 
 	const LayoutComponent = $derived(LAYOUT_COMPONENT_MAP[stateLayoutDerived.layoutType()]);
 
-	// --- Core UI theme derivations (Task 12 wiring). Logic below is copied from the
-	// corresponding legacy Button*.svelte/Label*.svelte files (see task-12-report.md for the
-	// exact source of each), not reinvented, so behavior matches the legacy branch 1:1.
-
-	// StatCard "win" variant: no "big win" threshold exists anywhere in the real codebase today
-	// (confirmed via repo-wide search before writing this), so only 'zero'/'active' are derived
-	// here. 'big' is reachable in StatCard's own type but nothing in this wiring ever sets it --
-	// documented as a known gap, not invented.
-	const winState = $derived(stateBet.winBookEventAmount > 0 ? 'active' : 'zero');
-
-	// Copied from ButtonBuyBonus.svelte
-	const buyBonusActive = $derived(stateBetDerived.activeBetMode()?.type === 'activate');
-	const buyBonusDisabled = $derived(!stateXstateDerived.isIdle());
-	const onpressBuyBonus = () => {
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
-		if (buyBonusActive) {
-			stateBet.activeBetModeKey = 'BASE';
-		} else {
-			stateModal.modal = { name: 'buyBonus' };
-		}
-	};
-
-	// Copied from ButtonTurbo.svelte
-	const turboActive = $derived(stateBet.isTurbo);
-	const turboDisabled = $derived(stateBet.isSpaceHold);
-	const onpressTurbo = () => {
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
-		stateBetDerived.updateIsTurbo(!stateBet.isTurbo, { persistent: true });
-	};
-
-	// Copied from ButtonAutoSpin.svelte
-	const autoSpinActive = $derived(stateBetDerived.hasAutoBetCounter());
-	const autoSpinDisabled = $derived.by(() => {
-		if (stateBet.isSpaceHold) return true;
-		if (!stateXstateDerived.isIdle() && !stateBetDerived.hasAutoBetCounter()) return true;
-		if (!stateBetDerived.isBetCostAvailable()) return true;
-		return false;
-	});
-	const onpressAutoSpin = () => {
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
-		if (stateBetDerived.hasAutoBetCounter()) {
-			stateBet.autoSpinsCounter = 0;
-		} else {
-			stateModal.modal = { name: 'autoSpin' };
-		}
-	};
-
-	// Copied from LabelBet.svelte -- bet-amount menu entry point, missing from the Core UI branch
-	// (found in the final whole-branch review).
-	const betMenuDisabled = $derived(!stateXstateDerived.isIdle());
-	const onpressBet = () => {
-		if (betMenuDisabled) return;
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
-		stateModal.modal = { name: 'betAmountMenu' };
-	};
+	const {
+		winState,
+		buyBonusActive,
+		buyBonusDisabled,
+		onpressBuyBonus,
+		turboActive,
+		turboDisabled,
+		onpressTurbo,
+		autoSpinActive,
+		autoSpinDisabled,
+		onpressAutoSpin,
+		betMenuDisabled,
+		onpressBet,
+		menuItems,
+		onToggleMenu,
+	} = createCoreUiDerived(context);
 
 	// Only under the Core UI theme -- the legacy branch still mounts ButtonTurbo.svelte, which
 	// already owns this exact subscription; adding it unconditionally here would double-subscribe
@@ -122,6 +85,9 @@
 		});
 	}
 
+	// Core UI theme derivations are shared with LayoutPortrait.svelte so both layouts use the
+	// same state and event handlers.
+
 	// Core UI layout compensation constants -- LayoutDesktop.svelte's call sites pass
 	// {anchor: 0.5} (buttons) / {stacked: true} (amounts) assuming legacy anchor/pivot semantics
 	// (see Button.svelte's pivot={anchorToPivot(...)} and UiLabel.svelte's stacked anchor). The 6
@@ -132,54 +98,6 @@
 	const FEATURE_ENTRY_WIDTH = 190; // must match FeatureEntryButton.svelte's internal WIDTH
 	const FEATURE_ENTRY_HEIGHT = 56; // must match FeatureEntryButton.svelte's internal HEIGHT
 	const STAT_CARD_WIDTH = { balance: 200, bet: 260, win: 200 } as const; // must match StatCard.svelte's internal WIDTH ternary
-
-	// buttonMenu (!isDefault) renders HUDMenuPanel, which absorbs the 5 other legacy menu
-	// snippets (buttonPayTable/buttonGameRules/buttonSettings/buttonSoundSwitch/buttonMenuClose)
-	// as its `items`. onpress logic per item copied from the matching legacy Button*.svelte.
-	const menuItems = $derived([
-		{
-			icon: 'paytable' as const,
-			onpress: () => {
-				eventEmitter.broadcast({ type: 'soundPressGeneral' }); // copied from ButtonPayTable.svelte
-				stateModal.modal = { name: 'payTable' };
-			},
-		},
-		{
-			icon: 'gameRules' as const,
-			onpress: () => {
-				eventEmitter.broadcast({ type: 'soundPressGeneral' }); // copied from ButtonGameRules.svelte
-				stateModal.modal = { name: 'gameRules' };
-			},
-		},
-		{
-			icon: 'settings' as const,
-			onpress: () => {
-				eventEmitter.broadcast({ type: 'soundPressGeneral' }); // copied from ButtonSettings.svelte
-				stateModal.modal = { name: 'settings' };
-			},
-		},
-		{
-			icon: (stateSound.volumeValueMaster === 0 ? 'soundOff' : 'soundOn') as const,
-			onpress: () => {
-				eventEmitter.broadcast({ type: 'soundPressGeneral' }); // copied from ButtonSoundSwitch.svelte
-				stateSound.volumeValueMaster = stateSound.volumeValueMaster === 0 ? 50 : 0;
-			},
-		},
-		{
-			icon: 'close' as const,
-			onpress: () => {
-				eventEmitter.broadcast({ type: 'soundPressGeneral' }); // copied from ButtonMenuClose.svelte
-				stateUi.menuOpen = false;
-			},
-		},
-	]);
-
-	// Copied from ButtonMenu.svelte, adapted to toggle (legacy ButtonMenu only ever opens;
-	// HUDMenuPanel's single icon must also close, so this toggles instead of always opening).
-	const onToggleMenu = () => {
-		eventEmitter.broadcast({ type: 'soundPressGeneral' });
-		stateUi.menuOpen = !stateUi.menuOpen;
-	};
 </script>
 
 <EnableSpaceHold />
@@ -217,7 +135,7 @@
 						variant="win"
 						label={i18nDerived.win()}
 						value={bookEventAmountToCurrencyString(stateBet.winBookEventAmount)}
-						winState={winState}
+						{winState}
 					/>
 				</Container>
 			{/if}
@@ -245,7 +163,11 @@
 				<Container x={-FEATURE_ENTRY_WIDTH / 2} y={-FEATURE_ENTRY_HEIGHT / 2}>
 					<FeatureEntryButton
 						label={buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}
-						state={buyBonusDisabled ? 'disabled' : buyBonusActive ? 'highlightedAvailable' : 'default'}
+						state={buyBonusDisabled
+							? 'disabled'
+							: buyBonusActive
+								? 'highlightedAvailable'
+								: 'default'}
 						onpress={onpressBuyBonus}
 					/>
 				</Container>
