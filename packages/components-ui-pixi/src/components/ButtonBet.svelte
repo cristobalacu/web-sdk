@@ -9,9 +9,12 @@
 	import { UI_BASE_FONT_SIZE, UI_BASE_SIZE } from '../constants';
 	import { i18nDerived } from '../i18n/i18nDerived';
 	import { getCoreTheme } from '../theme/context';
+	import { resolveSpinRadius } from '../theme/resolveSpinRadius';
+	import { getContext } from '../context';
 	import SpinButton from './SpinButton/SpinButton.svelte';
 
 	const props: Partial<Omit<ButtonProps, 'children'>> = $props();
+	const context = getContext();
 	const disabled = $derived(!stateBetDerived.isBetCostAvailable());
 	const sizes = { width: UI_BASE_SIZE, height: UI_BASE_SIZE };
 </script>
@@ -75,7 +78,10 @@
 				preserves the legacy "disabled means unclickable" behavior without modifying the
 				already-reviewed Task 7 component.
 			-->
-			{@const spinDiameter = getCoreTheme().geometry.radius.spinDesktop * 2}
+			{@const spinDiameter = resolveSpinRadius(
+				getCoreTheme(),
+				context.stateLayoutDerived.layoutType(),
+			)}
 			<Container x={-spinDiameter / 2} y={-spinDiameter / 2}>
 				<SpinButton state={spinButtonState} onpress={disabled ? undefined : onpress} />
 			</Container>

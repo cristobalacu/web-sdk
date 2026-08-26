@@ -3,6 +3,8 @@
 	import { Container, Graphics } from 'pixi-svelte';
 
 	import { getCoreTheme } from '../../theme/context';
+	import { resolveSpinRadius } from '../../theme/resolveSpinRadius';
+	import { getContext } from '../../context';
 	import Icon from '../../icons/Icon.svelte';
 
 	type SpinState = 'idle' | 'hover' | 'pressed' | 'spinning' | 'disabled' | 'autoplayActive';
@@ -14,7 +16,11 @@
 
 	const props: Props = $props();
 	const theme = getCoreTheme();
-	const DIAMETER = theme.geometry.radius.spinDesktop * 2; // 128 con umbralCoreTheme
+	const context = getContext();
+	// spinMobile (104) en portrait, spinDesktop (128) en el resto -- ver ButtonBet.svelte, que
+	// debe resolver este mismo valor para su wrapper/offset (no pueden desincronizarse). Ambos
+	// call sites comparten resolveSpinRadius() para que no puedan divergir.
+	const DIAMETER = $derived(resolveSpinRadius(theme, context.stateLayoutDerived.layoutType()));
 
 	const strokeOpacityByState: Record<SpinState, number> = {
 		idle: 0.85,
