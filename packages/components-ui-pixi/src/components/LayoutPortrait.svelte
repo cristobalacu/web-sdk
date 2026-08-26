@@ -21,6 +21,7 @@
 	import StatCard from './StatCard/StatCard.svelte';
 	import FeatureEntryButton from './FeatureEntryButton/FeatureEntryButton.svelte';
 	import { createCoreUiDerived } from './coreUiDerived.svelte';
+	import { resolveSpinRadius } from '../theme/resolveSpinRadius';
 
 	const props: LayoutUiProps = $props();
 	const context = getContext();
@@ -45,6 +46,8 @@
 	// Con este wrapper, las coordenadas y tamaños de Penpot se usan literalmente sin conversión
 	// adicional; ver spec §3 para la derivación completa.
 	const PENPOT_SCALE = 2.7;
+	const MOBILE_CONTROLS_Y = 152;
+	const MOBILE_SPIN_DIAMETER = resolveSpinRadius(getCoreTheme(), 'portrait');
 
 	const DRAWER_Y = {
 		unfold: 0,
@@ -330,7 +333,12 @@
 					onpress={coreUiDerived.onpressBuyBonus}
 				/>
 			</Container>
-			<Container x={388 - 104} y={152}>
+			<!-- ButtonBet centres its Core spin with a -diameter/2 wrapper. Pass the
+			     centre coordinate here so the visible button starts at the controls row. -->
+			<Container
+				x={388 - MOBILE_SPIN_DIAMETER / 2}
+				y={MOBILE_CONTROLS_Y + MOBILE_SPIN_DIAMETER / 2}
+			>
 				{@render props.buttonBet({ anchor: 0.5 })}
 			</Container>
 		</Container>
