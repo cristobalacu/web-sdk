@@ -7,7 +7,7 @@
 	import { App, Text, REM } from 'pixi-svelte';
 	import { stateModal } from 'state-shared';
 
-	import { UI, UiGameName, setCoreTheme } from 'components-ui-pixi';
+	import { UI, UiGameName, setCoreTheme, getCoreTheme } from 'components-ui-pixi';
 	import { GameVersion, Modals } from 'components-ui-html';
 
 	import { getContext } from '../game/context';
@@ -25,6 +25,7 @@
 	import TumbleBoard from './TumbleBoard.svelte';
 	import TumbleWinAmount from './TumbleWinAmount.svelte';
 	import GlobalMultiplier from './GlobalMultiplier.svelte';
+	import PortalPower from './PortalPower.svelte';
 	import MultiplierBoard from './MultiplierBoard.svelte';
 	import MultiplierTotal from './MultiplierTotal.svelte';
 	import Win from './Win.svelte';
@@ -32,7 +33,6 @@
 	import FreeSpinCounter from './FreeSpinCounter.svelte';
 	import FreeSpinOutro from './FreeSpinOutro.svelte';
 	import Transition from './Transition.svelte';
-	import I18nTest from './I18nTest.svelte';
 
 	setCoreTheme(umbralCoreTheme);
 
@@ -75,7 +75,11 @@
 			<Board />
 			<Anticipations />
 			<TumbleWinAmount />
-			<GlobalMultiplier />
+			{#if context.stateLayoutDerived.layoutType() === 'portrait' && !getCoreTheme().meta.isDefault}
+				<PortalPower />
+			{:else}
+				<GlobalMultiplier />
+			{/if}
 		</MainContainer>
 
 		<MainContainer>
@@ -109,13 +113,12 @@
 		</UI>
 		<Win />
 		<FreeSpinIntro />
-		{#if ['desktop', 'landscape'].includes(context.stateLayoutDerived.layoutType())}
+		{#if ['desktop', 'landscape'].includes(context.stateLayoutDerived.layoutType()) || (context.stateLayoutDerived.layoutType() === 'portrait' && !getCoreTheme().meta.isDefault)}
 			<FreeSpinCounter />
 		{/if}
 		<FreeSpinOutro />
 		<Transition />
 
-		<I18nTest />
 	{/if}
 </App>
 

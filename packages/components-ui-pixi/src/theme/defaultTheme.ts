@@ -37,7 +37,7 @@ export const defaultTheme: CoreTheme = {
 		},
 	},
 	geometry: {
-		radius: { card: 0, hud: 0, secondaryButton: 999, spinDesktop: 999 },
+		radius: { card: 0, hud: 0, secondaryButton: 999, spinDesktop: 999, spinMobile: 999 },
 		strokeWidth: { base: 0, active: 0 },
 	},
 	typography: {

@@ -59,6 +59,7 @@ export type CoreThemeGeometry = {
 		hud: number;
 		secondaryButton: number;
 		spinDesktop: number;
+		spinMobile: number;
 	};
 	strokeWidth: {
 		base: number;
