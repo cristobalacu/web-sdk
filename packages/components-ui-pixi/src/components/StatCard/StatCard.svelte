@@ -28,13 +28,15 @@
 	const VALUE_Y = size === 'mobile' ? 22 : PADDING + LABEL_FONT_SIZE + 6;
 
 	const valueStyle = $derived(() => {
+		if (props.variant === 'bet') return theme.typography.betValue;
 		if (props.variant !== 'win') return theme.typography.primaryValue;
 		if (props.winState === 'big') return theme.typography.winBig;
 		if (props.winState === 'active') return theme.typography.winActive;
 		return theme.typography.winZero;
 	});
 
-	const draw = (g: import('pixi.js').Graphics) => drawDarkGlass(theme, g, WIDTH, HEIGHT, theme.geometry.radius.card);
+	const draw = (g: import('pixi.js').Graphics) =>
+		drawDarkGlass(theme, g, WIDTH, HEIGHT, theme.geometry.radius.card);
 </script>
 
 <Container
@@ -42,7 +44,7 @@
 	cursor={props.onpress ? 'pointer' : 'default'}
 	onpointerup={props.onpress}
 >
-	<Graphics draw={draw} />
+	<Graphics {draw} />
 	<Text
 		x={PADDING}
 		y={LABEL_Y}

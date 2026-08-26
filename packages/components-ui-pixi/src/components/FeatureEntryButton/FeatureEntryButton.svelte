@@ -19,14 +19,14 @@
 
 	const props: Props = $props();
 	const theme = getCoreTheme();
-	const size = props.size ?? 'desktop';
-	const iconOnly = size === 'mobile' && (props.iconOnly ?? false);
+	const size = $derived(props.size ?? 'desktop');
+	const iconOnly = $derived(size === 'mobile' && (props.iconOnly ?? false));
 
 	// Mobile normal: 100x44 (Penpot "Mobile -- Core Application"). Mobile icon-only: 48x48
 	// (Penpot "Mobile -- 360 Stress Test") -- no es un escalado de 100x44, es un botón circular
 	// aparte con el mismo radio que SecondaryIconButton.
-	const WIDTH = iconOnly ? 48 : size === 'mobile' ? 100 : 190;
-	const HEIGHT = iconOnly ? 48 : size === 'mobile' ? 44 : 56;
+	const WIDTH = $derived(iconOnly ? 48 : size === 'mobile' ? 100 : 190);
+	const HEIGHT = $derived(iconOnly ? 48 : size === 'mobile' ? 44 : 56);
 
 	// highlightedAvailable y hover comparten semántica cian ("disponible/interacción") — ver
 	// Decision Gate 2026-08-22: cian = interacción/disponible, dorado = reward/win. No usar
@@ -41,12 +41,20 @@
 
 	const draw = (g: import('pixi.js').Graphics) => {
 		drawDarkGlass(theme, g, WIDTH, HEIGHT, HEIGHT / 2);
-		g.stroke({ color: strokeColorByState[props.state], alpha: 0.55, width: theme.geometry.strokeWidth.base + 0.5 });
+		g.stroke({
+			color: strokeColorByState[props.state],
+			alpha: 0.55,
+			width: theme.geometry.strokeWidth.base + 0.5,
+		});
 	};
 </script>
 
-<Container eventMode={props.state === 'disabled' ? 'none' : 'static'} cursor="pointer" onpointerup={props.onpress}>
-	<Graphics draw={draw} />
+<Container
+	eventMode={props.state === 'disabled' ? 'none' : 'static'}
+	cursor="pointer"
+	onpointerup={props.onpress}
+>
+	<Graphics {draw} />
 	<Container x={iconOnly ? WIDTH / 2 - 9 : 20} y={HEIGHT / 2 - 9}>
 		<Icon name="feature" size={18} strokeWidth={2} color={strokeColorByState[props.state]} />
 	</Container>
