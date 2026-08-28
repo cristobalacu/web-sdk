@@ -69,6 +69,9 @@
 				fontSize: size === 'mobile' ? 12 : 14,
 				fontWeight: '700',
 				fill: theme.colors.neutral.textPrimary,
+				align: 'left',
+				wordWrap: true,
+				wordWrapWidth: WIDTH - 48 - 8,
 			}}
 		/>
 	{/if}
