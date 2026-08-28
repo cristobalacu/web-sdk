@@ -4,11 +4,14 @@
 	import { Text, REM } from 'pixi-svelte';
 	import { WHITE } from 'constants-shared/colors';
 
+	import { getContext } from '../context';
+
 	type Props = {
 		name: string;
 	};
 
 	const props: Props = $props();
+	const context = getContext();
 	const reactiveDate = new SvelteDate();
 	const clock = $derived(
 		reactiveDate.toLocaleTimeString('en-US', {
@@ -17,15 +20,24 @@
 			hour12: false,
 		}),
 	);
-	const textProps = {
+	// At the smallMobile breakpoint (<=375px canvas width, see utils-layout's
+	// CANVAS_SIZE_TYPE_BREAK_POINTS) the header (clock + game name here, plus the
+	// right-anchored logo rendered separately by each game) doesn't fit at fixed pixel
+	// sizes -- drop the non-essential clock and shrink the remaining text there. Games
+	// rendering their own logo/title next to this component should apply the same 0.75
+	// scale at this breakpoint to stay visually consistent (see umbral-portal's Game.svelte).
+	const isSmallMobile = $derived(context.stateLayoutDerived.canvasSizeType() === 'smallMobile');
+	const showClock = $derived(!isSmallMobile);
+	const headerFontScale = $derived(isSmallMobile ? 0.75 : 1);
+	const textProps = $derived({
 		style: {
 			fontFamily: 'proxima-nova',
-			fontSize: REM * 1.5,
+			fontSize: REM * 1.5 * headerFontScale,
 			fontWeight: '600',
-			lineHeight: REM * 2,
+			lineHeight: REM * 2 * headerFontScale,
 			fill: WHITE,
 		},
-	} as const;
+	} as const);
 
 	let clockSizes = $state({ width: 0, height: 0 });
 
@@ -40,5 +52,7 @@
 	});
 </script>
 
-<Text text={clock} onresize={(value) => (clockSizes = value)} {...textProps} />
-<Text text={props.name} x={clockSizes.width + 5} {...textProps} />
+{#if showClock}
+	<Text text={clock} onresize={(value) => (clockSizes = value)} {...textProps} />
+{/if}
+<Text text={props.name} x={showClock ? clockSizes.width + 5 : 0} {...textProps} />

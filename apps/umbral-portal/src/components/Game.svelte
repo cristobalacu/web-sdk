@@ -40,6 +40,11 @@
 	setCoreTheme(umbralCoreTheme);
 
 	const context = getContext();
+	// Must match the scale UiGameName.svelte (components-ui-pixi) applies to the clock/game
+	// name at the same breakpoint, so the header reads as one consistent size.
+	const headerFontScale = $derived(
+		context.stateLayoutDerived.canvasSizeType() === 'smallMobile' ? 0.75 : 1,
+	);
 
 	onMount(() => (context.stateLayout.showLoadingScreen = true));
 
@@ -106,9 +111,9 @@
 					text="ADD YOUR LOGO"
 					style={{
 						fontFamily: 'proxima-nova',
-						fontSize: REM * 1.5,
+						fontSize: REM * 1.5 * headerFontScale,
 						fontWeight: '600',
-						lineHeight: REM * 2,
+						lineHeight: REM * 2 * headerFontScale,
 						fill: 0xffffff,
 					}}
 				/>
