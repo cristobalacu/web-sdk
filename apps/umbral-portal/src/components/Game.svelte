@@ -12,12 +12,15 @@
 
 	import { getContext } from '../game/context';
 	import { umbralCoreTheme } from '../theme/umbralCoreTheme';
+	import { i18nDerived } from '../i18n/i18nDerived';
 	import EnableSound from './EnableSound.svelte';
 	import EnableGameActor from './EnableGameActor.svelte';
 	import ResumeBet from './ResumeBet.svelte';
 	import Sound from './Sound.svelte';
 	import Background from './Background.svelte';
 	import LoadingScreen from './LoadingScreen.svelte';
+	import PayTableContent from './PayTableContent.svelte';
+	import GameRulesContent from './GameRulesContent.svelte';
 	import BoardFrame from './BoardFrame.svelte';
 	import Board from './Board.svelte';
 	import Anticipations from './Anticipations.svelte';
@@ -122,8 +125,17 @@
 	{/if}
 </App>
 
-<Modals>
+<Modals
+	payTableTitle={i18nDerived.payTableTitle()}
+	gameRulesTitle={i18nDerived.gameRulesTitle()}
+>
 	{#snippet version()}
 		<GameVersion version="0.0.0" />
+	{/snippet}
+	{#snippet payTableContent()}
+		<PayTableContent />
+	{/snippet}
+	{#snippet gameRulesContent()}
+		<GameRulesContent />
 	{/snippet}
 </Modals>
