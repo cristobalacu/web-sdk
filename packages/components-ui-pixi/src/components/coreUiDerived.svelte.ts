@@ -18,9 +18,15 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 		}
 	};
 
+	// turboDisabled/autoSpinDisabled are enforced here (not just via SecondaryIconButton's
+	// eventMode) because at compact these two also render inside HUDMenuPanel, which renders
+	// every item with a fixed state="default" and has no per-item disabled concept -- without
+	// this guard the collapsed menu items would be pressable in states the standalone icons
+	// never allow.
 	const turboActive = $derived(stateBet.isTurbo);
 	const turboDisabled = $derived(stateBet.isSpaceHold);
 	const onpressTurbo = () => {
+		if (turboDisabled) return;
 		eventEmitter.broadcast({ type: 'soundPressGeneral' });
 		stateBetDerived.updateIsTurbo(!stateBet.isTurbo, { persistent: true });
 	};
@@ -33,6 +39,7 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 		return false;
 	});
 	const onpressAutoSpin = () => {
+		if (autoSpinDisabled) return;
 		eventEmitter.broadcast({ type: 'soundPressGeneral' });
 		if (stateBetDerived.hasAutoBetCounter()) {
 			stateBet.autoSpinsCounter = 0;
