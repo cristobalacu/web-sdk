@@ -26,7 +26,12 @@
 	// sizes -- drop the non-essential clock and shrink the remaining text there. Games
 	// rendering their own logo/title next to this component should apply the same 0.75
 	// scale at this breakpoint to stay visually consistent (see umbral-portal's Game.svelte).
-	const isSmallMobile = $derived(context.stateLayoutDerived.canvasSizeType() === 'smallMobile');
+	// compact is a strict subset of what used to be smallMobile (see utils-layout's
+	// CANVAS_SIZE_TYPE_BREAK_POINTS) -- both breakpoints get at least the same treatment
+	// here so a compact device never silently falls back to full-size rendering.
+	const isSmallMobile = $derived(
+		['smallMobile', 'compact'].includes(context.stateLayoutDerived.canvasSizeType()),
+	);
 	const showClock = $derived(!isSmallMobile);
 	const headerFontScale = $derived(isSmallMobile ? 0.75 : 1);
 	const textProps = $derived({

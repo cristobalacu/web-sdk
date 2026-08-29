@@ -43,7 +43,7 @@
 	// Must match the scale UiGameName.svelte (components-ui-pixi) applies to the clock/game
 	// name at the same breakpoint, so the header reads as one consistent size.
 	const headerFontScale = $derived(
-		context.stateLayoutDerived.canvasSizeType() === 'smallMobile' ? 0.75 : 1,
+		['smallMobile', 'compact'].includes(context.stateLayoutDerived.canvasSizeType()) ? 0.75 : 1,
 	);
 
 	onMount(() => (context.stateLayout.showLoadingScreen = true));
