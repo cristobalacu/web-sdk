@@ -7,7 +7,13 @@
 	import { App, Text, REM } from 'pixi-svelte';
 	import { stateModal } from 'state-shared';
 
-	import { UI, UiGameName, setCoreTheme, getCoreTheme } from 'components-ui-pixi';
+	import {
+		UI,
+		UiGameName,
+		setCoreTheme,
+		getCoreTheme,
+		HEADER_FONT_SCALE_BY_SIZE_TYPE,
+	} from 'components-ui-pixi';
 	import { GameVersion, Modals } from 'components-ui-html';
 
 	import { getContext } from '../game/context';
@@ -40,10 +46,10 @@
 	setCoreTheme(umbralCoreTheme);
 
 	const context = getContext();
-	// Must match the scale UiGameName.svelte (components-ui-pixi) applies to the clock/game
-	// name at the same breakpoint, so the header reads as one consistent size.
+	// Shared with UiGameName.svelte (components-ui-pixi) so the clock/game name and this
+	// game's own logo text scale down together at the same breakpoint.
 	const headerFontScale = $derived(
-		['smallMobile', 'compact'].includes(context.stateLayoutDerived.canvasSizeType()) ? 0.75 : 1,
+		HEADER_FONT_SCALE_BY_SIZE_TYPE[context.stateLayoutDerived.canvasSizeType()] ?? 1,
 	);
 
 	onMount(() => (context.stateLayout.showLoadingScreen = true));

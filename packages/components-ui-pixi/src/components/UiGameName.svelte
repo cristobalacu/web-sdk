@@ -5,6 +5,7 @@
 	import { WHITE } from 'constants-shared/colors';
 
 	import { getContext } from '../context';
+	import { HEADER_FONT_SCALE_BY_SIZE_TYPE } from './headerFontScale';
 
 	type Props = {
 		name: string;
@@ -20,20 +21,24 @@
 			hour12: false,
 		}),
 	);
-	// At the smallMobile breakpoint (<=375px canvas width, see utils-layout's
+	// Below smallMobile (<=375px canvas width, see utils-layout's
 	// CANVAS_SIZE_TYPE_BREAK_POINTS) the header (clock + game name here, plus the
 	// right-anchored logo rendered separately by each game) doesn't fit at fixed pixel
 	// sizes -- drop the non-essential clock and shrink the remaining text there. Games
-	// rendering their own logo/title next to this component should apply the same 0.75
-	// scale at this breakpoint to stay visually consistent (see umbral-portal's Game.svelte).
-	// compact is a strict subset of what used to be smallMobile (see utils-layout's
-	// CANVAS_SIZE_TYPE_BREAK_POINTS) -- both breakpoints get at least the same treatment
-	// here so a compact device never silently falls back to full-size rendering.
+	// rendering their own logo/title next to this component should apply the same
+	// HEADER_FONT_SCALE_BY_SIZE_TYPE at each tier to stay visually consistent (see
+	// umbral-portal's Game.svelte). compact gets a smaller scale than smallMobile: it has
+	// less available width for the same two header texts, and 0.75 alone still overlapped
+	// the game name against a game's logo even at the top of the smallMobile range (see
+	// docs/superpowers/2026-08-21-stake-engine-submission-punchlist.md block 9) -- both
+	// tiers were re-verified live against that overlap at their narrowest real width.
 	const isSmallMobile = $derived(
 		['smallMobile', 'compact'].includes(context.stateLayoutDerived.canvasSizeType()),
 	);
 	const showClock = $derived(!isSmallMobile);
-	const headerFontScale = $derived(isSmallMobile ? 0.75 : 1);
+	const headerFontScale = $derived(
+		HEADER_FONT_SCALE_BY_SIZE_TYPE[context.stateLayoutDerived.canvasSizeType()] ?? 1,
+	);
 	const textProps = $derived({
 		style: {
 			fontFamily: 'proxima-nova',
