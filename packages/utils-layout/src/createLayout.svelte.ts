@@ -8,10 +8,7 @@ const CANVAS_RATIO_TYPE_BREAK_POINTS = {
 };
 
 const CANVAS_SIZE_TYPE_BREAK_POINTS = {
-	compact: 320, // Umbral Portal mini-player estimate, unverified against real Stake
-	// dimensions (stake.com not reachable from this dev environment; Stake's own docs
-	// only state a qualitative "no visible distortion" requirement, no exact size) — see
-	// docs/superpowers/specs/2026-08-29-core-ui-theme-layer-compact-design.md §0.
+	compact: 320, // Umbral Portal mini-player estimate, unverified — see docs/superpowers/specs/2026-08-29-core-ui-theme-layer-compact-design.md §0
 	smallMobile: 375, // Max size of small mobile layouts e.g. iPhone SE
 	mobile: 480, // Max size of common mobile layouts e.g. iPhone XR
 	tablet: 820, // Max size of tablets layouts, e.g. iPad Air
@@ -55,7 +52,11 @@ export const createLayout = (layoutOptions: {
 	const layoutType = () => {
 		if (canvasRatioType() === 'almostSquare') return 'tablet' as const;
 		if (canvasRatioType() === 'longHeight') return 'portrait' as const;
-		if (canvasSizeType() === 'mobile' || canvasSizeType() === 'smallMobile')
+		if (
+			canvasSizeType() === 'mobile' ||
+			canvasSizeType() === 'smallMobile' ||
+			canvasSizeType() === 'compact'
+		)
 			return 'landscape' as const;
 		return 'desktop' as const;
 	};
