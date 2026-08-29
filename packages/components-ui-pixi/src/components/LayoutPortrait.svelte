@@ -298,28 +298,30 @@
 					onToggle={coreUiDerived.onToggleMenu}
 				/>
 			</Container>
-			<Container x={12 + 46 + 10} y={152}>
-				<SecondaryIconButton
-					icon="autoplay"
-					state={coreUiDerived.autoSpinDisabled
-						? 'disabled'
-						: coreUiDerived.autoSpinActive
-							? 'active'
-							: 'default'}
-					onpress={coreUiDerived.onpressAutoSpin}
-				/>
-			</Container>
-			<Container x={12 + (46 + 10) * 2} y={152}>
-				<SecondaryIconButton
-					icon="turbo"
-					state={coreUiDerived.turboDisabled
-						? 'disabled'
-						: coreUiDerived.turboActive
-							? 'active'
-							: 'default'}
-					onpress={coreUiDerived.onpressTurbo}
-				/>
-			</Container>
+			{#if !coreUiDerived.isCompact}
+				<Container x={12 + 46 + 10} y={152}>
+					<SecondaryIconButton
+						icon="autoplay"
+						state={coreUiDerived.autoSpinDisabled
+							? 'disabled'
+							: coreUiDerived.autoSpinActive
+								? 'active'
+								: 'default'}
+						onpress={coreUiDerived.onpressAutoSpin}
+					/>
+				</Container>
+				<Container x={12 + (46 + 10) * 2} y={152}>
+					<SecondaryIconButton
+						icon="turbo"
+						state={coreUiDerived.turboDisabled
+							? 'disabled'
+							: coreUiDerived.turboActive
+								? 'active'
+								: 'default'}
+						onpress={coreUiDerived.onpressTurbo}
+					/>
+				</Container>
+			{/if}
 			<Container x={12 + (46 + 10) * 3} y={152}>
 				<FeatureEntryButton
 					label={coreUiDerived.buyBonusActive ? i18nDerived.disable() : i18nDerived.buyBonus()}

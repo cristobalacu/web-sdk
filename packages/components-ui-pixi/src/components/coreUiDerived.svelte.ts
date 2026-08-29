@@ -48,6 +48,8 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 		stateModal.modal = { name: 'betAmountMenu' };
 	};
 
+	const isCompact = $derived(context.stateLayoutDerived.canvasSizeType() === 'compact');
+
 	const menuItems = $derived([
 		{
 			icon: 'paytable' as const,
@@ -77,6 +79,12 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 				stateSound.volumeValueMaster = stateSound.volumeValueMaster === 0 ? 50 : 0;
 			},
 		},
+		...(isCompact
+			? [
+					{ icon: 'turbo' as const, onpress: onpressTurbo },
+					{ icon: 'autoplay' as const, onpress: onpressAutoSpin },
+				]
+			: []),
 		{
 			icon: 'close' as const,
 			onpress: () => {
@@ -124,5 +132,8 @@ export function createCoreUiDerived(context: ReturnType<typeof getContext>) {
 			return menuItems;
 		},
 		onToggleMenu,
+		get isCompact() {
+			return isCompact;
+		},
 	};
 }
