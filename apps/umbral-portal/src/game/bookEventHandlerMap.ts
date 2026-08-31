@@ -100,7 +100,10 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		await eventEmitter.broadcastAsync({ type: 'transition' });
 		eventEmitter.broadcast({ type: 'freeSpinIntroShow' });
 		eventEmitter.broadcast({ type: 'soundOnce', name: 'jng_intro_fs' });
+		eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_bonus_entry' });
 		eventEmitter.broadcast({ type: 'soundMusic', name: 'bgm_freespin' });
+		eventEmitter.broadcast({ type: 'soundStop', name: 'sfx_portal_ambient_base' });
+		eventEmitter.broadcast({ type: 'soundLoop', name: 'sfx_portal_ambient_bonus' });
 		await eventEmitter.broadcastAsync({
 			type: 'freeSpinIntroUpdate',
 			totalFreeSpins: bookEvent.totalFs,
@@ -152,6 +155,9 @@ export const bookEventHandlerMap: BookEventHandlerMap<BookEvent, BookEventContex
 		eventEmitter.broadcast({ type: 'globalMultiplierHide' });
 		eventEmitter.broadcast({ type: 'freeSpinOutroShow' });
 		eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_youwon_panel' });
+		eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_bonus_exit' });
+		eventEmitter.broadcast({ type: 'soundStop', name: 'sfx_portal_ambient_bonus' });
+		eventEmitter.broadcast({ type: 'soundLoop', name: 'sfx_portal_ambient_base' });
 		winLevelSoundsPlay({ winLevelData });
 		await eventEmitter.broadcastAsync({
 			type: 'freeSpinOutroCountUp',

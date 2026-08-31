@@ -38,6 +38,7 @@
 
 	onMount(() => {
 		sound.players.music.play({ name: 'bgm_main' });
+		sound.players.loop.play({ name: 'sfx_portal_ambient_base' });
 
 		//How to control volume per soundfile(use fade)
 		// sound.players.music.fade({ name: 'bgm_main', from: 0, to: 1, duration: 3000 });
