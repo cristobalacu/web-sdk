@@ -44,13 +44,14 @@
 		soundFade: async ({ name, duration, from, to }) => await sound.fade({ name, duration, from, to }), // prettier-ignore
 		// P4 tension layer
 		globalMultiplierUpdate: (emitterEvent) => (portalPowerMultiplier = emitterEvent.multiplier),
+		globalMultiplierHide: () => (portalPowerMultiplier = 1),
 	});
 
 	$effect(() => {
 		const shouldBeActive = isAnyReelAnticipating || portalPowerMultiplier > 1;
 		if (shouldBeActive === tensionActive) return;
 		tensionActive = shouldBeActive;
-		sound.fade({
+		void sound.fade({
 			name: 'bgm_tension_layer',
 			from: shouldBeActive ? 0 : 1,
 			to: shouldBeActive ? 1 : 0,
@@ -61,8 +62,11 @@
 	onMount(() => {
 		sound.players.music.play({ name: 'bgm_main' });
 		sound.players.loop.play({ name: 'sfx_portal_ambient_base' });
+		// bgm_tension_layer goes through the loop player, not music -- the music player's
+		// createPlayMusic.svelte.ts calls pauseAllMusic() unconditionally on every play, which
+		// would pause bgm_main immediately (and again on every later track switch) if used here.
 		sound.players.loop.play({ name: 'bgm_tension_layer' });
-		sound.fade({ name: 'bgm_tension_layer', from: 1, to: 0, duration: 0 });
+		void sound.fade({ name: 'bgm_tension_layer', from: 0, to: 0, duration: 0 });
 
 		//How to control volume per soundfile(use fade)
 		// sound.players.music.fade({ name: 'bgm_main', from: 0, to: 1, duration: 3000 });
