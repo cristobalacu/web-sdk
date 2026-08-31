@@ -1,4 +1,12 @@
+<script lang="ts" module>
+	export type EmitterEventAnticipation =
+		| { type: 'anticipationStart'; reelIndex: number }
+		| { type: 'anticipationEnd'; reelIndex: number };
+</script>
+
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { SpineProvider, SpineTrack } from 'pixi-svelte';
 	import { stateBetDerived } from 'state-shared';
 
@@ -17,6 +25,12 @@
 	type AnimationName = 'anticipation_intro' | 'anticipation_loop' | 'anticipation_out';
 
 	let animationName = $state<AnimationName>('anticipation_intro');
+
+	onMount(() => {
+		context.eventEmitter.broadcast({ type: 'anticipationStart', reelIndex: props.reel.reelIndex });
+		context.eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_anticipation_start' });
+		context.eventEmitter.broadcast({ type: 'soundLoop', name: 'sfx_anticipation' });
+	});
 
 	$effect(() => {
 		if (props.reel.reelState.motion === 'stopped') {
@@ -45,6 +59,10 @@
 				}
 
 				if (animationName === 'anticipation_out') {
+					context.eventEmitter.broadcast({
+						type: 'anticipationEnd',
+						reelIndex: props.reel.reelIndex,
+					});
 					props.oncomplete();
 				}
 			},
