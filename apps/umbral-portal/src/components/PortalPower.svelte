@@ -20,7 +20,12 @@
 	context.eventEmitter.subscribeOnMount({
 		globalMultiplierShow: () => (show = true),
 		globalMultiplierHide: () => (show = false),
-		globalMultiplierUpdate: (emitterEvent) => (multiplier = emitterEvent.multiplier),
+		globalMultiplierUpdate: (emitterEvent) => {
+			if (emitterEvent.multiplier > multiplier) {
+				context.eventEmitter.broadcast({ type: 'soundOnce', name: 'sfx_portal_power_increment' });
+			}
+			multiplier = emitterEvent.multiplier;
+		},
 	});
 </script>
 
